@@ -2,20 +2,22 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-# Copy the HomeScreen.html file
-COPY HomeScreen.html /app/
+# Copy package.json and package-lock.json first for better caching
+COPY package.json package-lock.json ./
 
-# Create a directory for the web app
-RUN mkdir -p /app/web-build
+# Install dependencies with legacy peer deps to resolve conflicts
+RUN npm install --legacy-peer-deps
 
-# Copy the HomeScreen.html to index.html in web-build directory
-RUN cp /app/HomeScreen.html /app/web-build/index.html
+# Copy the rest of the application code, including src/screens
+COPY . .
 
-# Expose port
+# Expose the necessary ports
 EXPOSE 19006
 
-# Install a simple HTTP server to serve the static content
-RUN npm install -g http-server
+# Set environment variables for React development server
+ENV PORT=19006
+ENV HOST=0.0.0.0
+ENV EXPO_PUBLIC_API_URL=http://localhost:4000/api
 
-# Start the HTTP server
-CMD ["http-server", "web-build", "-p", "19006", "--cors", "-a", "0.0.0.0"] 
+# Start the React development server
+CMD ["npm", "run", "web"] 
