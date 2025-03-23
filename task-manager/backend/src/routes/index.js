@@ -5,14 +5,10 @@ const taskRoutes = require('./taskRoutes');
 const router = express.Router();
 
 // API routes
-router.use('/api/task-types', taskTypeRoutes);
-router.use('/api/tasks', taskRoutes);
+router.use('/task-types', taskTypeRoutes);
+router.use('/tasks', taskRoutes);
 
-// Health check endpoints
-router.get('/api/health', (req, res) => {
-  res.status(200).json({ status: 'healthy' });
-});
-
+// Health check endpoint
 router.get('/health', (req, res) => {
   res.status(200).json({ status: 'healthy' });
 });
