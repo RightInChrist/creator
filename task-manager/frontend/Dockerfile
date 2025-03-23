@@ -2,20 +2,21 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
+# Copy package.json and package-lock.json
+COPY package.json package-lock.json ./
 
-# First install core dependencies with legacy-peer-deps
-RUN npm install --legacy-peer-deps
+# Install dependencies
+RUN npm install
 
-# Add required web dependencies with legacy-peer-deps
-RUN npm install --legacy-peer-deps react-dom@18.2.0 react-native-web@~0.18.10 @expo/webpack-config@^0.17.0
-
-# Copy the rest of the application
+# Copy the rest of the app
 COPY . .
 
-# Make sure ports are exposed
+# Expose ports used by Expo
 EXPOSE 19000 19001 19002 19006
 
-# Use the web script from package.json with host binding for Docker
-CMD ["sh", "-c", "npm run web -- --host=0.0.0.0"] 
+# Set environment for Expo to run in container
+ENV REACT_NATIVE_PACKAGER_HOSTNAME="0.0.0.0"
+ENV EXPO_DEVTOOLS_LISTEN_ADDRESS="0.0.0.0"
+
+# Start Expo
+CMD ["npm", "start", "--", "--host", "0.0.0.0"] 

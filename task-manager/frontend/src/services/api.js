@@ -1,7 +1,23 @@
 import axios from 'axios';
 
-// Base URL for API requests
-const API_URL = 'http://backend:5000/api';
+// Base URL for API requests - Handle different environments
+let API_URL;
+
+// Get the environment
+if (process.env.NODE_ENV === 'production') {
+  API_URL = 'http://backend:5000/api';
+} else {
+  // For Expo in development, we need to use the mapped port from docker-compose
+  // This will work when running in the Docker container
+  API_URL = 'http://backend:5000/api';
+  
+  // For mobile devices/emulators, use the local IP or hostname
+  if (process.env.EXPO_PUBLIC_API_URL) {
+    API_URL = process.env.EXPO_PUBLIC_API_URL;
+  }
+}
+
+console.log('Using API URL:', API_URL);
 
 // Create axios instance
 const api = axios.create({
