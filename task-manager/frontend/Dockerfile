@@ -5,13 +5,16 @@ WORKDIR /app
 # Copy package.json and package-lock.json first for better caching
 COPY package.json package-lock.json ./
 
-# Install dependencies with legacy peer deps to resolve conflicts
+# Install dependencies with legacy peer deps flag to handle dependency conflicts
 RUN npm install --legacy-peer-deps
 
-# Copy the rest of the application code, including src/screens
+# Install required web dependencies
+RUN npm install --legacy-peer-deps react-native-web@~0.18.10 react-dom@18.2.0 @expo/webpack-config@^18.0.1
+
+# Copy the rest of the application code, including the src/screens directory
 COPY . .
 
-# Expose the necessary ports
+# Expose the port the app runs on
 EXPOSE 19006
 
 # Set environment variables for React development server
