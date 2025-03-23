@@ -22,11 +22,7 @@ app.get('/health', (req, res) => {
 });
 
 // Middleware
-app.use(cors({
-  origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+// CORS not needed since frontend and backend are served from the same origin via nginx
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
