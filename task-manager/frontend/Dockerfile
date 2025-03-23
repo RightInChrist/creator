@@ -8,8 +8,8 @@ COPY package.json package-lock.json ./
 # Install dependencies with legacy peer deps flag to handle dependency conflicts
 RUN npm install --legacy-peer-deps
 
-# Install required web dependencies
-RUN npm install --legacy-peer-deps react-native-web@~0.18.10 react-dom@18.2.0 @expo/webpack-config@^18.0.1
+# Install required web dependencies using npx expo install as recommended
+RUN npx expo install react-native-web@~0.18.10 react-dom@18.2.0 @expo/webpack-config@^18.0.1
 
 # Copy the rest of the application code, including the src/screens directory
 COPY . .
