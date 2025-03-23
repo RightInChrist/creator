@@ -2,14 +2,11 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
+# No need to copy package files - they'll be mounted via volumes
+# Dependencies will be installed on the host and mounted to the container
 
-# Install dependencies with legacy-peer-deps to handle version conflicts
-RUN npm install --legacy-peer-deps
-
-# No need for global installs - use local node_modules from package.json
-# No need to copy source files - they'll be mounted via volumes
+# Install global utilities if needed
+# RUN npm install -g some-global-package
 
 EXPOSE 3000
 CMD ["npm", "start"] 
