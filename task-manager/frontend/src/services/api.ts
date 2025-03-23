@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { Task, TaskInput, TaskType, TaskTypeInput } from '../types';
+import { Task, TaskInput, TaskType, TaskTypeInput, TaskTemplate, TaskTemplateInput, TaskGenerationInput } from '../types';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000';
 const BASE_API = process.env.REACT_APP_BASE_API || '/api/v1';
@@ -69,6 +69,33 @@ export const taskTypesApi = {
   
   delete: (id: number): Promise<AxiosResponse<{ message: string }>> => {
     return api.delete(`${BASE_API}/task-types/${id}`);
+  }
+};
+
+// Task Templates API
+export const taskTemplatesApi = {
+  getAll: (): Promise<AxiosResponse<TaskTemplate[]>> => {
+    return api.get(`${BASE_API}/task-templates`);
+  },
+  
+  getById: (id: number): Promise<AxiosResponse<TaskTemplate>> => {
+    return api.get(`${BASE_API}/task-templates/${id}`);
+  },
+  
+  create: (template: TaskTemplateInput): Promise<AxiosResponse<TaskTemplate>> => {
+    return api.post(`${BASE_API}/task-templates`, template);
+  },
+  
+  update: (id: number, template: Partial<TaskTemplateInput>): Promise<AxiosResponse<TaskTemplate>> => {
+    return api.put(`${BASE_API}/task-templates/${id}`, template);
+  },
+  
+  delete: (id: number): Promise<AxiosResponse<{ message: string }>> => {
+    return api.delete(`${BASE_API}/task-templates/${id}`);
+  },
+  
+  generateTasks: (id: number, data: TaskGenerationInput): Promise<AxiosResponse<{ message: string, tasks: Task[] }>> => {
+    return api.post(`${BASE_API}/task-templates/${id}/generate`, data);
   }
 };
 

@@ -1,6 +1,7 @@
 const sequelize = require('../config/database');
 const TaskType = require('./TaskType');
 const Task = require('./Task');
+const TaskTemplate = require('./TaskTemplate');
 
 // Define associations
 // (Already defined in each model file)
@@ -27,5 +28,6 @@ module.exports = {
   sequelize,
   TaskType,
   Task,
+  TaskTemplate,
   initDatabase
 }; 

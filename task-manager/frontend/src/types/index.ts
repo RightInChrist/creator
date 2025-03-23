@@ -79,6 +79,56 @@ export interface TaskInput {
   relatedTasks?: number[];
 }
 
+// Task template interface
+export interface TaskTemplate {
+  id: number;
+  name: string;
+  description?: string;
+  templateStructure: TaskTemplateItem[];
+  variables: string[];
+  defaultValues: Record<string, string>;
+  createdBy?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// Task template item interface (represents a task in the template)
+export interface TaskTemplateItem {
+  id: number | string; // Local ID for reference within the template
+  title: string;
+  description?: string;
+  taskTypeId: number;
+  status?: TaskStatus;
+  priority?: TaskPriority;
+  dueDate?: string;
+  estimatedHours?: number;
+  assignedTo?: string;
+  gitRepo?: string;
+  product?: string;
+  feature?: string;
+  jobToBeDone?: string;
+  userStory?: string;
+  stepsToReproduce?: string;
+  definitionOfDone?: string;
+  subtasks?: TaskTemplateItem[];
+  relatedTasks?: (number | string)[]; // Array of template item IDs
+}
+
+// Task template input interface
+export interface TaskTemplateInput {
+  name: string;
+  description?: string;
+  templateStructure: TaskTemplateItem[];
+  variables?: string[];
+  defaultValues?: Record<string, string>;
+  createdBy?: string;
+}
+
+// Task generation input interface
+export interface TaskGenerationInput {
+  variables: Record<string, string>;
+}
+
 // Task type input interface
 export interface TaskTypeInput {
   name: string;

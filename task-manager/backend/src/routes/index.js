@@ -1,12 +1,14 @@
 const express = require('express');
 const taskTypeRoutes = require('./taskTypeRoutes');
 const taskRoutes = require('./taskRoutes');
+const taskTemplateRoutes = require('./taskTemplateRoutes');
 
 const router = express.Router();
 
 // API routes
 router.use('/task-types', taskTypeRoutes);
 router.use('/tasks', taskRoutes);
+router.use('/task-templates', taskTemplateRoutes);
 
 // Health check endpoint
 router.get('/health', (req, res) => {
