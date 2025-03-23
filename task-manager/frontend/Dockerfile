@@ -18,5 +18,5 @@ EXPOSE 19000 19001 19002 19006
 ENV REACT_NATIVE_PACKAGER_HOSTNAME="0.0.0.0"
 ENV EXPO_DEVTOOLS_LISTEN_ADDRESS="0.0.0.0"
 
-# Start Expo
-CMD ["npm", "start", "--", "--host", "0.0.0.0"] 
+# Start Expo with correct host parameter
+CMD ["npm", "run", "web"] 
