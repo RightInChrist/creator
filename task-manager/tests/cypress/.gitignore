@@ -1,0 +1,14 @@
+# Cypress generated files
+screenshots/
+videos/
+downloads/
+results/
+
+# Cypress runner generated files
+.Trash-*
+
+# Cypress binary cache
+.cypress/
+
+# Node modules if installed locally
+node_modules/ 
