@@ -10,7 +10,7 @@ services:
       - "3000:3000"
     volumes:
       - ./frontend:/app
-      - frontend_node_modules:/app/node_modules
+      - ./frontend/node_modules:/app/node_modules
     environment:
       - NODE_ENV=development
       - REACT_APP_API_URL=http://localhost:4000
@@ -31,7 +31,7 @@ services:
       - "4000:5000"
     volumes:
       - ./backend:/app
-      - backend_node_modules:/app/node_modules
+      - ./backend/node_modules:/app/node_modules
     environment:
       - NODE_ENV=development
       - DB_HOST=postgres
@@ -67,5 +67,3 @@ services:
 
 volumes:
   postgres_data:
-  frontend_node_modules:
-  backend_node_modules:
