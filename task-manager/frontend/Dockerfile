@@ -11,5 +11,5 @@ COPY . .
 
 EXPOSE 19000 19001 19002 19006
 
-# Start with web platform
-CMD ["npm", "run", "start", "--", "--web", "--host", "0.0.0.0"] 
+# Start with explicit web platform and host binding
+CMD ["sh", "-c", "export REACT_NATIVE_PACKAGER_HOSTNAME=0.0.0.0 && npx expo start --web --host=0.0.0.0"] 
