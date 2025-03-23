@@ -1,0 +1,52 @@
+[
+  {
+    "id": 1,
+    "name": "Epic",
+    "description": "A large body of work that can be broken down into smaller stories",
+    "color": "#9b59b6",
+    "icon": "flag",
+    "isDefault": true,
+    "createdAt": "2025-03-23T12:33:11.157Z",
+    "updatedAt": "2025-03-23T12:33:11.157Z"
+  },
+  {
+    "id": 2,
+    "name": "Story",
+    "description": "A user-centric feature or enhancement",
+    "color": "#2ecc71",
+    "icon": "book",
+    "isDefault": true,
+    "createdAt": "2025-03-23T12:33:11.168Z",
+    "updatedAt": "2025-03-23T12:33:11.168Z"
+  },
+  {
+    "id": 3,
+    "name": "Task",
+    "description": "A single unit of work",
+    "color": "#3498db",
+    "icon": "check-square",
+    "isDefault": true,
+    "createdAt": "2025-03-23T12:33:11.173Z",
+    "updatedAt": "2025-03-23T12:33:11.173Z"
+  },
+  {
+    "id": 4,
+    "name": "Sub-Task",
+    "description": "A smaller task that is part of a larger task",
+    "color": "#1abc9c",
+    "icon": "list",
+    "isDefault": true,
+    "createdAt": "2025-03-23T12:33:11.177Z",
+    "updatedAt": "2025-03-23T12:33:11.177Z"
+  },
+  {
+    "id": 5,
+    "name": "Bug",
+    "description": "A problem that needs to be fixed",
+    "color": "#e74c3c",
+    "icon": "bug",
+    "isDefault": true,
+    "createdAt": "2025-03-23T12:33:11.182Z",
+    "updatedAt": "2025-03-23T12:33:11.182Z"
+  }
+]
