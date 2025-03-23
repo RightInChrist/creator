@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #6200ee;
+            text-align: center;
+        }
+        .button {
+            background-color: #6200ee;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 16px;
+        }
+        .button:hover {
+            background-color: #5000c8;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        li:last-child {
+            border-bottom: none;
+        }
+        .task-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .status {
+            padding: 5px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        .status-todo {
+            background-color: #ffeaea;
+            color: #d32f2f;
+        }
+        .status-in-progress {
+            background-color: #fff8e1;
+            color: #f57c00;
+        }
+        .status-done {
+            background-color: #e8f5e9;
+            color: #388e3c;
+        }
+        .task-form {
+            margin-top: 20px;
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+        }
+        .form-group {
+            margin-bottom: 10px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Task Manager</h1>
+        
+        <div>
+            <button id="loadTasks" class="button">Load Tasks</button>
+            <button id="loadTaskTypes" class="button">Load Task Types</button>
+            <button id="showAddForm" class="button">Add New Task</button>
+        </div>
+        
+        <div id="tasksList">
+            <h2>Tasks</h2>
+            <ul id="tasks"></ul>
+        </div>
+        
+        <div id="taskTypesList" style="display: none;">
+            <h2>Task Types</h2>
+            <ul id="taskTypes"></ul>
+        </div>
+        
+        <div id="addTaskForm" class="task-form" style="display: none;">
+            <h2>Add New Task</h2>
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" id="title" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="taskType">Task Type</label>
+                <select id="taskType"></select>
+            </div>
+            <div class="form-group">
+                <label for="status">Status</label>
+                <select id="status">
+                    <option value="TO_DO">To Do</option>
+                    <option value="IN_PROGRESS">In Progress</option>
+                    <option value="DONE">Done</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="priority">Priority</label>
+                <select id="priority">
+                    <option value="LOW">Low</option>
+                    <option value="MEDIUM">Medium</option>
+                    <option value="HIGH">High</option>
+                </select>
+            </div>
+            <button id="submitTask" class="button">Create Task</button>
+        </div>
+    </div>
+    
+    <script>
+        const API_URL = 'http://localhost:4000';
+        
+        // Load tasks from API
+        document.getElementById('loadTasks').addEventListener('click', async () => {
+            try {
+                document.getElementById('tasksList').style.display = 'block';
+                document.getElementById('taskTypesList').style.display = 'none';
+                document.getElementById('addTaskForm').style.display = 'none';
+                
+                const response = await fetch(`${API_URL}/api/tasks`);
+                const tasks = await response.json();
+                
+                const tasksList = document.getElementById('tasks');
+                tasksList.innerHTML = '';
+                
+                if (tasks.length === 0) {
+                    tasksList.innerHTML = '<li>No tasks found</li>';
+                    return;
+                }
+                
+                tasks.forEach(task => {
+                    const li = document.createElement('li');
+                    const statusClass = task.status === 'TO_DO' ? 'status-todo' : 
+                                       task.status === 'IN_PROGRESS' ? 'status-in-progress' : 'status-done';
+                    
+                    li.className = 'task-item';
+                    li.innerHTML = `
+                        <div>
+                            <strong>${task.title}</strong>
+                            <p>${task.description || 'No description'}</p>
+                        </div>
+                        <span class="status ${statusClass}">${formatStatus(task.status)}</span>
+                    `;
+                    tasksList.appendChild(li);
+                });
+            } catch (error) {
+                console.error('Error loading tasks:', error);
+                document.getElementById('tasks').innerHTML = '<li>Error loading tasks</li>';
+            }
+        });
+        
+        // Load task types from API
+        document.getElementById('loadTaskTypes').addEventListener('click', async () => {
+            try {
+                document.getElementById('tasksList').style.display = 'none';
+                document.getElementById('taskTypesList').style.display = 'block';
+                document.getElementById('addTaskForm').style.display = 'none';
+                
+                const response = await fetch(`${API_URL}/api/task-types`);
+                const taskTypes = await response.json();
+                
+                const taskTypesList = document.getElementById('taskTypes');
+                taskTypesList.innerHTML = '';
+                
+                if (taskTypes.length === 0) {
+                    taskTypesList.innerHTML = '<li>No task types found</li>';
+                    return;
+                }
+                
+                taskTypes.forEach(type => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <strong>${type.name}</strong>
+                        <p>${type.description || 'No description'}</p>
+                    `;
+                    taskTypesList.appendChild(li);
+                });
+            } catch (error) {
+                console.error('Error loading task types:', error);
+                document.getElementById('taskTypes').innerHTML = '<li>Error loading task types</li>';
+            }
+        });
+        
+        // Show add task form
+        document.getElementById('showAddForm').addEventListener('click', async () => {
+            document.getElementById('tasksList').style.display = 'none';
+            document.getElementById('taskTypesList').style.display = 'none';
+            document.getElementById('addTaskForm').style.display = 'block';
+            
+            // Load task types for the dropdown
+            try {
+                const response = await fetch(`${API_URL}/api/task-types`);
+                const taskTypes = await response.json();
+                
+                const taskTypeSelect = document.getElementById('taskType');
+                taskTypeSelect.innerHTML = '';
+                
+                taskTypes.forEach(type => {
+                    const option = document.createElement('option');
+                    option.value = type.id;
+                    option.textContent = type.name;
+                    taskTypeSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error loading task types:', error);
+            }
+        });
+        
+        // Submit new task
+        document.getElementById('submitTask').addEventListener('click', async () => {
+            const title = document.getElementById('title').value;
+            const description = document.getElementById('description').value;
+            const taskTypeId = document.getElementById('taskType').value;
+            const status = document.getElementById('status').value;
+            const priority = document.getElementById('priority').value;
+            
+            if (!title) {
+                alert('Title is required');
+                return;
+            }
+            
+            if (!taskTypeId) {
+                alert('Task type is required');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_URL}/api/tasks`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        title,
+                        description,
+                        taskTypeId,
+                        status,
+                        priority
+                    })
+                });
+                
+                if (response.ok) {
+                    alert('Task created successfully');
+                    document.getElementById('title').value = '';
+                    document.getElementById('description').value = '';
+                    document.getElementById('loadTasks').click();
+                } else {
+                    const error = await response.json();
+                    alert(`Error creating task: ${error.message}`);
+                }
+            } catch (error) {
+                console.error('Error creating task:', error);
+                alert('Error creating task');
+            }
+        });
+        
+        // Format status for display
+        function formatStatus(status) {
+            switch (status) {
+                case 'TO_DO':
+                    return 'To Do';
+                case 'IN_PROGRESS':
+                    return 'In Progress';
+                case 'DONE':
+                    return 'Done';
+                default:
+                    return status;
+            }
+        }
+        
+        // Load tasks on page load
+        document.getElementById('loadTasks').click();
+    </script>
+</body>
+</html>
