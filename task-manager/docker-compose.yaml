@@ -33,6 +33,7 @@ services:
       - DB_NAME=taskmanager
       - DB_USER=postgres
       - DB_PASSWORD=postgres
+    restart: on-failure
     depends_on:
       - postgres
 
