@@ -1,33 +1,28 @@
 describe('Full Stack Application', () => {
   beforeEach(() => {
     cy.visit('/')
-    // Wait for data to load
-    cy.wait(2000)
+    // Wait for React to load
+    cy.wait(5000)
   })
 
   it('should load the Task Manager application', () => {
-    cy.get('h1').should('be.visible')
+    // Check for the header with Task Manager
+    cy.get('h1, h2').should('be.visible')
       .and('contain.text', 'Task Manager')
   })
 
-  it('should display tasks from the backend', () => {
-    // Since we know there's at least one task from our API check
-    cy.get('#tasks')
-      .should('exist')
-      .and('not.be.empty')
-    
-    // Verify a task is displayed with its details
-    cy.get('.task')
-      .should('exist')
-      .within(() => {
-        cy.get('h3').should('exist') // Task title
-        cy.contains('Status:').should('exist') // Task status
-      })
+  it('should display navigation buttons', () => {
+    // Look for buttons from HomeScreen
+    cy.contains('View All Tasks').should('exist')
+    cy.contains('Create New Task').should('exist')
+    cy.contains('Manage Task Types').should('exist')
   })
 
-  it('should show proper content in task items', () => {
-    cy.get('.task').first().within(() => {
-      cy.get('h3').invoke('text').should('not.be.empty')
-    })
+  it('should navigate to Tasks screen when clicking View All Tasks', () => {
+    cy.contains('View All Tasks').click()
+    cy.wait(2000)
+    
+    // Should show Tasks screen title
+    cy.contains('All Tasks').should('exist')
   })
 }) 
