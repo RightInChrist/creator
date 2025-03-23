@@ -17,7 +17,11 @@ app.get('/test', (req, res) => {
 });
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:19006', 'http://localhost:19000', 'http://0.0.0.0:19006', 'http://0.0.0.0:19000'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
