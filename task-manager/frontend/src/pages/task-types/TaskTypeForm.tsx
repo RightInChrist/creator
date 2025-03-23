@@ -190,7 +190,7 @@ const TaskTypeForm: React.FC = () => {
                 <Typography variant="subtitle2">Color</Typography>
               </Box>
               <MuiColorInput
-                value={formData.color}
+                value={formData.color || '#3498db'}
                 onChange={handleColorChange}
                 format="hex"
                 fullWidth

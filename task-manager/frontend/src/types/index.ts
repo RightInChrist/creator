@@ -66,7 +66,7 @@ export interface TaskInput {
 export interface TaskTypeInput {
   name: string;
   description?: string;
-  color?: string;
+  color: string;
   icon?: string;
   isDefault?: boolean;
 }

@@ -2,12 +2,13 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-# Copy only package files first
+# Copy package files
 COPY package*.json ./
 
-# Install dependencies 
+# Install dependencies
 RUN npm install
 
+# No need for global installs - use local node_modules from package.json
 # No need to copy source files - they'll be mounted via volumes
 
 EXPOSE 3000
