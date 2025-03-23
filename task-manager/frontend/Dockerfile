@@ -2,27 +2,20 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-# Copy package.json and package-lock.json
-COPY package.json package-lock.json ./
+# Copy the HomeScreen.html file
+COPY HomeScreen.html /app/
 
-# Install dependencies with legacy peer deps to resolve conflicts
-RUN npm install --legacy-peer-deps
+# Create a directory for the web app
+RUN mkdir -p /app/web-build
 
-# Copy the rest of the app
-COPY . .
-
-# Install expo-cli and expo-web dependencies
-RUN npm install -g expo-cli
-RUN npm install --legacy-peer-deps @expo/webpack-config
-
-# Build the web version
-RUN npx expo export:web
+# Copy the HomeScreen.html to index.html in web-build directory
+RUN cp /app/HomeScreen.html /app/web-build/index.html
 
 # Expose port
 EXPOSE 19006
-EXPOSE 19000
-EXPOSE 19001
-EXPOSE 19002
 
-# Start the application for web
-CMD ["npx", "expo", "start", "--web", "--host", "0.0.0.0"] 
+# Install a simple HTTP server to serve the static content
+RUN npm install -g http-server
+
+# Start the HTTP server
+CMD ["http-server", "web-build", "-p", "19006", "--cors", "-a", "0.0.0.0"] 
