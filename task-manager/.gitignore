@@ -49,4 +49,12 @@ coverage/
 web-build/
 
 # Docker
-data/ 
+data/
+
+# Screenshots
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.bmp
+screenshots/ 
