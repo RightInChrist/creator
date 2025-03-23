@@ -27,7 +27,7 @@ app.get('/health', (req, res) => {
 
 // Middleware
 app.use(cors({
-  origin: ['http://nginx'],
+  origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
