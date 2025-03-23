@@ -14,11 +14,15 @@
   "tags": [
     {
       "name": "Tasks",
-      "description": "API endpoints for managing tasks"
+      "description": "Endpoints for managing tasks"
     },
     {
       "name": "Task Types",
-      "description": "API endpoints for managing task types"
+      "description": "Endpoints for managing task types"
+    },
+    {
+      "name": "Task Templates",
+      "description": "Endpoints for managing task templates and generating tasks from templates"
     },
     {
       "name": "System",
@@ -536,6 +540,311 @@
         }
       }
     },
+    "/api/task-templates": {
+      "get": {
+        "tags": ["Task Templates"],
+        "summary": "Get all task templates",
+        "responses": {
+          "200": {
+            "description": "A list of task templates",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TaskTemplate"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Task Templates"],
+        "summary": "Create a new task template",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskTemplateInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Task template created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskTemplate"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/task-templates/{id}": {
+      "get": {
+        "tags": ["Task Templates"],
+        "summary": "Get a task template by ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Task Template ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Task template details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskTemplate"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Task template not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Task Templates"],
+        "summary": "Update a task template",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Task Template ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskTemplateInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Task template updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskTemplate"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Task template not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Task Templates"],
+        "summary": "Delete a task template",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Task Template ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Task template deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Task template not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/task-templates/{id}/generate": {
+      "post": {
+        "tags": ["Task Templates"],
+        "summary": "Generate tasks from a template",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Task Template ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskGenerationInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Tasks generated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "tasks": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Task"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Task template not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/health": {
       "get": {
         "tags": ["System"],
@@ -832,6 +1141,124 @@
           },
           "error": {
             "type": "string"
+          }
+        }
+      },
+      "TaskTemplate": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "example": "Weekly Reporting Template"
+          },
+          "description": {
+            "type": "string",
+            "example": "Template for creating weekly reporting tasks"
+          },
+          "tasks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "example": "Prepare Financial Report"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Compile financial data for the week"
+                },
+                "taskTypeId": {
+                  "type": "integer",
+                  "example": 2
+                },
+                "dueDate": {
+                  "type": "string",
+                  "format": "date-time",
+                  "example": null
+                },
+                "daysToComplete": {
+                  "type": "integer",
+                  "example": 2
+                }
+              }
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "TaskTemplateInput": {
+        "type": "object",
+        "required": ["name", "tasks"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Weekly Reporting Template"
+          },
+          "description": {
+            "type": "string",
+            "example": "Template for creating weekly reporting tasks"
+          },
+          "tasks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["title", "taskTypeId"],
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "example": "Prepare Financial Report"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Compile financial data for the week"
+                },
+                "taskTypeId": {
+                  "type": "integer",
+                  "example": 2
+                },
+                "dueDate": {
+                  "type": "string",
+                  "format": "date-time",
+                  "example": null
+                },
+                "daysToComplete": {
+                  "type": "integer",
+                  "example": 2
+                }
+              }
+            }
+          }
+        }
+      },
+      "TaskGenerationInput": {
+        "type": "object",
+        "properties": {
+          "startDate": {
+            "type": "string",
+            "format": "date",
+            "example": "2023-06-01"
+          }
+        }
+      },
+      "Health": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "healthy"
           }
         }
       }
