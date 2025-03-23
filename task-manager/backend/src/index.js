@@ -16,9 +16,18 @@ app.get('/test', (req, res) => {
   return res.status(200).json({ message: 'Test endpoint is working', success: true });
 });
 
+// Health check endpoints for Docker
+app.get('/api/health', (req, res) => {
+  return res.status(200).json({ status: 'ok' });
+});
+
+app.get('/health', (req, res) => {
+  return res.status(200).json({ status: 'ok' });
+});
+
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:19006', 'http://localhost:19000', 'http://0.0.0.0:19006', 'http://0.0.0.0:19000'],
+  origin: ['http://nginx'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));

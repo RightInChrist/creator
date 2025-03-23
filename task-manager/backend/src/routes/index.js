@@ -8,8 +8,12 @@ const router = express.Router();
 router.use('/api/task-types', taskTypeRoutes);
 router.use('/api/tasks', taskRoutes);
 
-// Health check endpoint
+// Health check endpoints
 router.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'healthy' });
+});
+
+router.get('/health', (req, res) => {
   res.status(200).json({ status: 'healthy' });
 });
 
