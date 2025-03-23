@@ -45,6 +45,15 @@ export interface Task {
   taskType?: TaskType;
   parent?: Task | null;
   subtasks?: Task[];
+  gitRepo?: string;
+  product?: string;
+  feature?: string;
+  jobToBeDone?: string;
+  userStory?: string;
+  stepsToReproduce?: string;
+  definitionOfDone?: string;
+  relatedTasks?: number[] | Task[];
+  siblings?: Task[];
 }
 
 // Task input interface
@@ -60,6 +69,14 @@ export interface TaskInput {
   assignedTo?: string;
   createdBy?: string;
   parentId?: number | null;
+  gitRepo?: string;
+  product?: string;
+  feature?: string;
+  jobToBeDone?: string;
+  userStory?: string;
+  stepsToReproduce?: string;
+  definitionOfDone?: string;
+  relatedTasks?: number[];
 }
 
 // Task type input interface

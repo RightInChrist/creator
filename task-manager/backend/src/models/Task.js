@@ -54,6 +54,48 @@ const Task = sequelize.define('Task', {
       model: 'Tasks',
       key: 'id'
     }
+  },
+  // New fields
+  gitRepo: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  product: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  feature: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  // Type-specific fields
+  jobToBeDone: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  userStory: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  stepsToReproduce: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  definitionOfDone: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  // Linked task relationships (in addition to parent-child)
+  relatedTasks: {
+    type: DataTypes.TEXT, // Store as JSON string of task IDs
+    allowNull: true,
+    get() {
+      const value = this.getDataValue('relatedTasks');
+      return value ? JSON.parse(value) : [];
+    },
+    set(value) {
+      this.setDataValue('relatedTasks', value ? JSON.stringify(value) : null);
+    }
   }
 }, {
   timestamps: true

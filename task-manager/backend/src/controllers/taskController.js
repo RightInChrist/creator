@@ -1,4 +1,5 @@
 const { Task, TaskType } = require('../models');
+const { Op } = require('sequelize');
 
 // Get all tasks
 exports.getAllTasks = async (req, res) => {
@@ -32,7 +33,41 @@ exports.getTaskById = async (req, res) => {
       return res.status(404).json({ message: 'Task not found' });
     }
     
-    return res.status(200).json(task);
+    // Get related tasks if any
+    let relatedTasks = [];
+    if (task.relatedTasks && task.relatedTasks.length > 0) {
+      relatedTasks = await Task.findAll({
+        where: {
+          id: {
+            [Op.in]: task.relatedTasks
+          }
+        },
+        include: [{ model: TaskType, as: 'taskType' }]
+      });
+    }
+    
+    // Get siblings if parent exists
+    let siblings = [];
+    if (task.parentId) {
+      siblings = await Task.findAll({
+        where: {
+          parentId: task.parentId,
+          id: {
+            [Op.ne]: task.id // Exclude self
+          }
+        },
+        include: [{ model: TaskType, as: 'taskType' }]
+      });
+    }
+    
+    // Add related tasks and siblings to the response
+    const taskWithRelationships = {
+      ...task.toJSON(),
+      relatedTasks,
+      siblings
+    };
+    
+    return res.status(200).json(taskWithRelationships);
   } catch (error) {
     console.error('Error getting task:', error);
     return res.status(500).json({ message: 'Internal server error', error: error.message });
@@ -52,7 +87,16 @@ exports.createTask = async (req, res) => {
       estimatedHours,
       assignedTo,
       createdBy,
-      parentId
+      parentId,
+      // New fields
+      gitRepo,
+      product,
+      feature,
+      jobToBeDone,
+      userStory,
+      stepsToReproduce,
+      definitionOfDone,
+      relatedTasks
     } = req.body;
     
     if (!title) {
@@ -77,6 +121,21 @@ exports.createTask = async (req, res) => {
       }
     }
     
+    // Verify related tasks exist if specified
+    if (relatedTasks && relatedTasks.length > 0) {
+      const taskCount = await Task.count({
+        where: {
+          id: {
+            [Op.in]: relatedTasks
+          }
+        }
+      });
+      
+      if (taskCount !== relatedTasks.length) {
+        return res.status(404).json({ message: 'One or more related tasks not found' });
+      }
+    }
+    
     const newTask = await Task.create({
       title,
       description,
@@ -87,7 +146,16 @@ exports.createTask = async (req, res) => {
       estimatedHours,
       assignedTo,
       createdBy,
-      parentId
+      parentId,
+      // New fields
+      gitRepo,
+      product,
+      feature,
+      jobToBeDone,
+      userStory,
+      stepsToReproduce,
+      definitionOfDone,
+      relatedTasks
     });
     
     // Fetch the created task with associations
@@ -119,7 +187,16 @@ exports.updateTask = async (req, res) => {
       estimatedHours,
       actualHours,
       assignedTo,
-      parentId
+      parentId,
+      // New fields
+      gitRepo,
+      product,
+      feature,
+      jobToBeDone,
+      userStory,
+      stepsToReproduce,
+      definitionOfDone,
+      relatedTasks
     } = req.body;
     
     const task = await Task.findByPk(id);
@@ -149,6 +226,26 @@ exports.updateTask = async (req, res) => {
       }
     }
     
+    // Verify related tasks exist if specified
+    if (relatedTasks && relatedTasks.length > 0) {
+      // Check for self-reference
+      if (relatedTasks.includes(Number(id))) {
+        return res.status(400).json({ message: 'Task cannot be related to itself' });
+      }
+      
+      const taskCount = await Task.count({
+        where: {
+          id: {
+            [Op.in]: relatedTasks
+          }
+        }
+      });
+      
+      if (taskCount !== relatedTasks.length) {
+        return res.status(404).json({ message: 'One or more related tasks not found' });
+      }
+    }
+    
     await task.update({
       title: title || task.title,
       description: description !== undefined ? description : task.description,
@@ -159,7 +256,16 @@ exports.updateTask = async (req, res) => {
       estimatedHours: estimatedHours !== undefined ? estimatedHours : task.estimatedHours,
       actualHours: actualHours !== undefined ? actualHours : task.actualHours,
       assignedTo: assignedTo !== undefined ? assignedTo : task.assignedTo,
-      parentId: parentId !== undefined ? parentId : task.parentId
+      parentId: parentId !== undefined ? parentId : task.parentId,
+      // New fields
+      gitRepo: gitRepo !== undefined ? gitRepo : task.gitRepo,
+      product: product !== undefined ? product : task.product,
+      feature: feature !== undefined ? feature : task.feature,
+      jobToBeDone: jobToBeDone !== undefined ? jobToBeDone : task.jobToBeDone,
+      userStory: userStory !== undefined ? userStory : task.userStory,
+      stepsToReproduce: stepsToReproduce !== undefined ? stepsToReproduce : task.stepsToReproduce,
+      definitionOfDone: definitionOfDone !== undefined ? definitionOfDone : task.definitionOfDone,
+      relatedTasks: relatedTasks !== undefined ? relatedTasks : task.relatedTasks
     });
     
     // Fetch the updated task with associations
@@ -202,6 +308,167 @@ exports.deleteTask = async (req, res) => {
     return res.status(200).json({ message: 'Task deleted successfully' });
   } catch (error) {
     console.error('Error deleting task:', error);
+    return res.status(500).json({ message: 'Internal server error', error: error.message });
+  }
+};
+
+// Get related tasks
+exports.getRelatedTasks = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const task = await Task.findByPk(id);
+    
+    if (!task) {
+      return res.status(404).json({ message: 'Task not found' });
+    }
+    
+    if (!task.relatedTasks || task.relatedTasks.length === 0) {
+      return res.status(200).json([]);
+    }
+    
+    const relatedTasks = await Task.findAll({
+      where: {
+        id: {
+          [Op.in]: task.relatedTasks
+        }
+      },
+      include: [{ model: TaskType, as: 'taskType' }]
+    });
+    
+    return res.status(200).json(relatedTasks);
+  } catch (error) {
+    console.error('Error getting related tasks:', error);
+    return res.status(500).json({ message: 'Internal server error', error: error.message });
+  }
+};
+
+// Link tasks
+exports.linkTasks = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { targetIds } = req.body;
+    
+    if (!targetIds || !Array.isArray(targetIds) || targetIds.length === 0) {
+      return res.status(400).json({ message: 'Target task IDs are required' });
+    }
+    
+    const task = await Task.findByPk(id);
+    
+    if (!task) {
+      return res.status(404).json({ message: 'Task not found' });
+    }
+    
+    // Check if target IDs include self
+    if (targetIds.includes(Number(id))) {
+      return res.status(400).json({ message: 'Task cannot be linked to itself' });
+    }
+    
+    // Verify all target tasks exist
+    const targetCount = await Task.count({
+      where: {
+        id: {
+          [Op.in]: targetIds
+        }
+      }
+    });
+    
+    if (targetCount !== targetIds.length) {
+      return res.status(404).json({ message: 'One or more target tasks not found' });
+    }
+    
+    // Get current related tasks and add new ones without duplicates
+    const currentRelatedTasks = task.relatedTasks || [];
+    const newRelatedTasks = [...new Set([...currentRelatedTasks, ...targetIds])];
+    
+    await task.update({ relatedTasks: newRelatedTasks });
+    
+    // For bidirectional linking, also update the target tasks
+    for (const targetId of targetIds) {
+      const targetTask = await Task.findByPk(targetId);
+      const targetRelated = targetTask.relatedTasks || [];
+      if (!targetRelated.includes(Number(id))) {
+        await targetTask.update({ 
+          relatedTasks: [...targetRelated, Number(id)]
+        });
+      }
+    }
+    
+    // Fetch updated task with related tasks
+    const updatedTask = await Task.findByPk(id);
+    const relatedTasks = await Task.findAll({
+      where: {
+        id: {
+          [Op.in]: updatedTask.relatedTasks
+        }
+      },
+      include: [{ model: TaskType, as: 'taskType' }]
+    });
+    
+    return res.status(200).json({
+      ...updatedTask.toJSON(),
+      relatedTasks
+    });
+  } catch (error) {
+    console.error('Error linking tasks:', error);
+    return res.status(500).json({ message: 'Internal server error', error: error.message });
+  }
+};
+
+// Unlink tasks
+exports.unlinkTasks = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { targetIds } = req.body;
+    
+    if (!targetIds || !Array.isArray(targetIds) || targetIds.length === 0) {
+      return res.status(400).json({ message: 'Target task IDs are required' });
+    }
+    
+    const task = await Task.findByPk(id);
+    
+    if (!task) {
+      return res.status(404).json({ message: 'Task not found' });
+    }
+    
+    // Get current related tasks and remove the specified ones
+    const currentRelatedTasks = task.relatedTasks || [];
+    const newRelatedTasks = currentRelatedTasks.filter(
+      taskId => !targetIds.includes(taskId)
+    );
+    
+    await task.update({ relatedTasks: newRelatedTasks });
+    
+    // For bidirectional unlinking, also update the target tasks
+    for (const targetId of targetIds) {
+      const targetTask = await Task.findByPk(targetId);
+      if (targetTask) {
+        const targetRelated = targetTask.relatedTasks || [];
+        await targetTask.update({ 
+          relatedTasks: targetRelated.filter(taskId => taskId !== Number(id))
+        });
+      }
+    }
+    
+    // Fetch updated task with related tasks
+    const updatedTask = await Task.findByPk(id);
+    let relatedTasks = [];
+    if (updatedTask.relatedTasks && updatedTask.relatedTasks.length > 0) {
+      relatedTasks = await Task.findAll({
+        where: {
+          id: {
+            [Op.in]: updatedTask.relatedTasks
+          }
+        },
+        include: [{ model: TaskType, as: 'taskType' }]
+      });
+    }
+    
+    return res.status(200).json({
+      ...updatedTask.toJSON(),
+      relatedTasks
+    });
+  } catch (error) {
+    console.error('Error unlinking tasks:', error);
     return res.status(500).json({ message: 'Internal server error', error: error.message });
   }
 }; 

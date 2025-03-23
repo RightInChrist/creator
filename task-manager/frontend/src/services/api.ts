@@ -31,6 +31,21 @@ export const tasksApi = {
   
   delete: (id: number): Promise<AxiosResponse<{ message: string }>> => {
     return api.delete(`${BASE_API}/tasks/${id}`);
+  },
+  
+  // Added method to get related tasks for a specific task
+  getRelated: (id: number): Promise<AxiosResponse<Task[]>> => {
+    return api.get(`${BASE_API}/tasks/${id}/related`);
+  },
+  
+  // Added method to link tasks together
+  linkTasks: (sourceId: number, targetIds: number[]): Promise<AxiosResponse<Task>> => {
+    return api.post(`${BASE_API}/tasks/${sourceId}/link`, { targetIds });
+  },
+  
+  // Added method to unlink tasks
+  unlinkTasks: (sourceId: number, targetIds: number[]): Promise<AxiosResponse<Task>> => {
+    return api.post(`${BASE_API}/tasks/${sourceId}/unlink`, { targetIds });
   }
 };
 
