@@ -1,0 +1,1150 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Work Manager Task Management API",
+    "description": "API for managing tasks created from agent collaboration outputs",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "/api/v1",
+      "description": "Task Management API"
+    }
+  ],
+  "paths": {
+    "/epics": {
+      "get": {
+        "summary": "Get all epics",
+        "tags": ["Epics"],
+        "responses": {
+          "200": {
+            "description": "List of epics",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Epic"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new epic",
+        "tags": ["Epics"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EpicInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Epic created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Epic"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/epics/{epicId}": {
+      "get": {
+        "summary": "Get epic by ID",
+        "tags": ["Epics"],
+        "parameters": [
+          {
+            "name": "epicId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Epic details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Epic"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Epic not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update epic",
+        "tags": ["Epics"],
+        "parameters": [
+          {
+            "name": "epicId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EpicInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Epic updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Epic"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Epic not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete epic",
+        "tags": ["Epics"],
+        "parameters": [
+          {
+            "name": "epicId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Epic deleted successfully"
+          },
+          "404": {
+            "description": "Epic not found"
+          }
+        }
+      }
+    },
+    "/jtbd": {
+      "get": {
+        "summary": "Get all jobs to be done",
+        "tags": ["Jobs To Be Done"],
+        "responses": {
+          "200": {
+            "description": "List of jobs to be done",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/JTBD"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new job to be done",
+        "tags": ["Jobs To Be Done"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JTBDInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Job to be done created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JTBD"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/jtbd/{jtbdId}": {
+      "get": {
+        "summary": "Get job to be done by ID",
+        "tags": ["Jobs To Be Done"],
+        "parameters": [
+          {
+            "name": "jtbdId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Job to be done details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JTBD"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Job to be done not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update job to be done",
+        "tags": ["Jobs To Be Done"],
+        "parameters": [
+          {
+            "name": "jtbdId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JTBDInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Job to be done updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JTBD"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Job to be done not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete job to be done",
+        "tags": ["Jobs To Be Done"],
+        "parameters": [
+          {
+            "name": "jtbdId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Job to be done deleted successfully"
+          },
+          "404": {
+            "description": "Job to be done not found"
+          }
+        }
+      }
+    },
+    "/stories": {
+      "get": {
+        "summary": "Get all user stories",
+        "tags": ["User Stories"],
+        "parameters": [
+          {
+            "name": "epicId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter stories by epic ID"
+          },
+          {
+            "name": "jtbdId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter stories by job to be done ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of user stories",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserStory"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new user story",
+        "tags": ["User Stories"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserStoryInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User story created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserStory"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/stories/{storyId}": {
+      "get": {
+        "summary": "Get user story by ID",
+        "tags": ["User Stories"],
+        "parameters": [
+          {
+            "name": "storyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User story details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserStory"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User story not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update user story",
+        "tags": ["User Stories"],
+        "parameters": [
+          {
+            "name": "storyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserStoryInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User story updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserStory"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User story not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete user story",
+        "tags": ["User Stories"],
+        "parameters": [
+          {
+            "name": "storyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "User story deleted successfully"
+          },
+          "404": {
+            "description": "User story not found"
+          }
+        }
+      }
+    },
+    "/tasks": {
+      "get": {
+        "summary": "Get all tasks",
+        "tags": ["Tasks"],
+        "parameters": [
+          {
+            "name": "storyId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter tasks by user story ID"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": ["todo", "in_progress", "review", "completed"]
+            },
+            "description": "Filter tasks by status"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of tasks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Task"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new task",
+        "tags": ["Tasks"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Task created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/tasks/{taskId}": {
+      "get": {
+        "summary": "Get task by ID",
+        "tags": ["Tasks"],
+        "parameters": [
+          {
+            "name": "taskId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Task details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Task not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update task",
+        "tags": ["Tasks"],
+        "parameters": [
+          {
+            "name": "taskId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Task updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Task not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete task",
+        "tags": ["Tasks"],
+        "parameters": [
+          {
+            "name": "taskId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Task deleted successfully"
+          },
+          "404": {
+            "description": "Task not found"
+          }
+        }
+      }
+    },
+    "/requirements/import": {
+      "post": {
+        "summary": "Import requirements from agent collaboration output",
+        "tags": ["Requirements Import"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequirementsImport"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Requirements imported successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "epicIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "jtbdIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "storyIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "taskIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Epic": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "businessGoal": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "status": {
+            "type": "string",
+            "enum": ["planned", "in_progress", "completed", "blocked"]
+          },
+          "requirementsDocumentUrl": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "EpicInput": {
+        "type": "object",
+        "required": ["title", "description", "businessGoal"],
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "businessGoal": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "status": {
+            "type": "string",
+            "enum": ["planned", "in_progress", "completed", "blocked"],
+            "default": "planned"
+          },
+          "requirementsDocumentUrl": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "createdBy": {
+            "type": "string"
+          }
+        }
+      },
+      "JTBD": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "epicId": {
+            "type": "string"
+          },
+          "statement": {
+            "type": "string"
+          },
+          "userType": {
+            "type": "string"
+          },
+          "contextualDetails": {
+            "type": "string"
+          },
+          "motivations": {
+            "type": "string"
+          },
+          "expectedOutcome": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "status": {
+            "type": "string",
+            "enum": ["identified", "validated", "in_progress", "completed"]
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "JTBDInput": {
+        "type": "object",
+        "required": ["statement", "userType", "expectedOutcome"],
+        "properties": {
+          "epicId": {
+            "type": "string"
+          },
+          "statement": {
+            "type": "string"
+          },
+          "userType": {
+            "type": "string"
+          },
+          "contextualDetails": {
+            "type": "string"
+          },
+          "motivations": {
+            "type": "string"
+          },
+          "expectedOutcome": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "status": {
+            "type": "string",
+            "enum": ["identified", "validated", "in_progress", "completed"],
+            "default": "identified"
+          },
+          "createdBy": {
+            "type": "string"
+          }
+        }
+      },
+      "UserStory": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "epicId": {
+            "type": "string"
+          },
+          "jtbdId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "userType": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string"
+          },
+          "benefit": {
+            "type": "string"
+          },
+          "acceptanceCriteria": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "priority": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "points": {
+            "type": "integer"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["backlog", "ready", "in_progress", "review", "done"]
+          },
+          "technicalConsiderations": {
+            "type": "string"
+          },
+          "designConsiderations": {
+            "type": "string"
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "assignedTo": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "UserStoryInput": {
+        "type": "object",
+        "required": ["userType", "action", "benefit"],
+        "properties": {
+          "epicId": {
+            "type": "string"
+          },
+          "jtbdId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "userType": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string"
+          },
+          "benefit": {
+            "type": "string"
+          },
+          "acceptanceCriteria": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "priority": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "points": {
+            "type": "integer"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["backlog", "ready", "in_progress", "review", "done"],
+            "default": "backlog"
+          },
+          "technicalConsiderations": {
+            "type": "string"
+          },
+          "designConsiderations": {
+            "type": "string"
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "assignedTo": {
+            "type": "string"
+          }
+        }
+      },
+      "Task": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "storyId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": ["development", "design", "testing", "documentation", "devops", "other"]
+          },
+          "estimatedHours": {
+            "type": "number",
+            "format": "float"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["todo", "in_progress", "review", "completed"]
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "assignedTo": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "completedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "TaskInput": {
+        "type": "object",
+        "required": ["storyId", "title"],
+        "properties": {
+          "storyId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": ["development", "design", "testing", "documentation", "devops", "other"]
+          },
+          "estimatedHours": {
+            "type": "number",
+            "format": "float"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["todo", "in_progress", "review", "completed"],
+            "default": "todo"
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "assignedTo": {
+            "type": "string"
+          }
+        }
+      },
+      "RequirementsImport": {
+        "type": "object",
+        "properties": {
+          "collaborationId": {
+            "type": "string",
+            "description": "ID of the agent collaboration that produced the requirements"
+          },
+          "projectName": {
+            "type": "string",
+            "description": "Name of the project"
+          },
+          "businessGoals": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of business goals identified during collaboration"
+          },
+          "functionalRequirements": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "priority": {
+                  "type": "string",
+                  "enum": ["high", "medium", "low"]
+                },
+                "userType": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Functional requirements identified during collaboration"
+          },
+          "technicalRequirements": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "category": {
+                  "type": "string"
+                },
+                "impact": {
+                  "type": "string",
+                  "enum": ["high", "medium", "low"]
+                }
+              }
+            },
+            "description": "Technical requirements identified during collaboration"
+          },
+          "designRequirements": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "category": {
+                  "type": "string"
+                },
+                "impact": {
+                  "type": "string",
+                  "enum": ["high", "medium", "low"]
+                }
+              }
+            },
+            "description": "Design requirements identified during collaboration"
+          },
+          "constraints": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": ["time", "budget", "technical", "organizational", "legal"]
+                }
+              }
+            },
+            "description": "Constraints identified during collaboration"
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "ID or name of the user/agent creating the import"
+          }
+        },
+        "required": ["projectName", "businessGoals", "functionalRequirements"]
+      }
+    }
+  }
+} 
