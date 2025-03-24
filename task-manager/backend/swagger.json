@@ -2,13 +2,17 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Task Manager API",
-    "description": "API documentation for the Task Manager application",
+    "description": "API for managing tasks and task-related entities",
     "version": "1.0.0"
   },
   "servers": [
     {
-      "url": "/",
-      "description": "Local Development Server"
+      "url": "/api",
+      "description": "Main API"
+    },
+    {
+      "url": "/api/v1",
+      "description": "Task Management API v1"
     }
   ],
   "tags": [
@@ -23,6 +27,22 @@
     {
       "name": "Task Templates",
       "description": "Endpoints for managing task templates and generating tasks from templates"
+    },
+    {
+      "name": "Epics",
+      "description": "Endpoints for managing epics"
+    },
+    {
+      "name": "Jobs To Be Done",
+      "description": "Endpoints for managing jobs to be done (JTBD)"
+    },
+    {
+      "name": "User Stories",
+      "description": "Endpoints for managing user stories"
+    },
+    {
+      "name": "Requirements Import",
+      "description": "Endpoints for importing requirements from agent collaboration"
     },
     {
       "name": "System",
@@ -918,6 +938,758 @@
           }
         }
       }
+    },
+    "/v1/epics": {
+      "get": {
+        "tags": ["Epics"],
+        "summary": "Get all epics",
+        "responses": {
+          "200": {
+            "description": "List of epics",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Epic"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Epics"],
+        "summary": "Create a new epic",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EpicInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Epic created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Epic"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/epics/{epicId}": {
+      "get": {
+        "tags": ["Epics"],
+        "summary": "Get epic by ID",
+        "parameters": [
+          {
+            "name": "epicId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Epic details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Epic"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Epic not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Epics"],
+        "summary": "Update epic",
+        "parameters": [
+          {
+            "name": "epicId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EpicInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Epic updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Epic"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Epic not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Epics"],
+        "summary": "Delete epic",
+        "parameters": [
+          {
+            "name": "epicId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Epic deleted successfully"
+          },
+          "404": {
+            "description": "Epic not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/jtbd": {
+      "get": {
+        "tags": ["Jobs To Be Done"],
+        "summary": "Get all jobs to be done",
+        "responses": {
+          "200": {
+            "description": "List of jobs to be done",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/JTBD"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Jobs To Be Done"],
+        "summary": "Create a new job to be done",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JTBDInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Job to be done created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JTBD"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/jtbd/{jtbdId}": {
+      "get": {
+        "tags": ["Jobs To Be Done"],
+        "summary": "Get job to be done by ID",
+        "parameters": [
+          {
+            "name": "jtbdId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Job to be done details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JTBD"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Job to be done not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Jobs To Be Done"],
+        "summary": "Update job to be done",
+        "parameters": [
+          {
+            "name": "jtbdId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JTBDInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Job to be done updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JTBD"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Job to be done not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Jobs To Be Done"],
+        "summary": "Delete job to be done",
+        "parameters": [
+          {
+            "name": "jtbdId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Job to be done deleted successfully"
+          },
+          "404": {
+            "description": "Job to be done not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/stories": {
+      "get": {
+        "tags": ["User Stories"],
+        "summary": "Get all user stories",
+        "parameters": [
+          {
+            "name": "epicId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter stories by epic ID"
+          },
+          {
+            "name": "jtbdId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter stories by job to be done ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of user stories",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserStory"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["User Stories"],
+        "summary": "Create a new user story",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserStoryInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User story created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserStory"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/stories/{storyId}": {
+      "get": {
+        "tags": ["User Stories"],
+        "summary": "Get user story by ID",
+        "parameters": [
+          {
+            "name": "storyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User story details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserStory"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User story not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["User Stories"],
+        "summary": "Update user story",
+        "parameters": [
+          {
+            "name": "storyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserStoryInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User story updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserStory"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User story not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["User Stories"],
+        "summary": "Delete user story",
+        "parameters": [
+          {
+            "name": "storyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "User story deleted successfully"
+          },
+          "404": {
+            "description": "User story not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/requirements/import": {
+      "post": {
+        "summary": "Import requirements from agent collaboration output",
+        "tags": ["Requirements Import"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequirementsImport"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Requirements imported successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "epicIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "jtbdIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "storyIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "taskIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1261,6 +2033,387 @@
             "example": "healthy"
           }
         }
+      },
+      "Epic": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "businessGoal": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "status": {
+            "type": "string",
+            "enum": ["planned", "in_progress", "completed", "blocked"]
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "EpicInput": {
+        "type": "object",
+        "required": ["title", "description", "businessGoal"],
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "businessGoal": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "status": {
+            "type": "string",
+            "enum": ["planned", "in_progress", "completed", "blocked"],
+            "default": "planned"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "createdBy": {
+            "type": "string"
+          }
+        }
+      },
+      "JTBD": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "epicId": {
+            "type": "string"
+          },
+          "statement": {
+            "type": "string"
+          },
+          "userType": {
+            "type": "string"
+          },
+          "contextualDetails": {
+            "type": "string"
+          },
+          "motivations": {
+            "type": "string"
+          },
+          "expectedOutcome": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "status": {
+            "type": "string",
+            "enum": ["identified", "validated", "in_progress", "completed"]
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "JTBDInput": {
+        "type": "object",
+        "required": ["statement", "userType", "expectedOutcome"],
+        "properties": {
+          "epicId": {
+            "type": "string"
+          },
+          "statement": {
+            "type": "string"
+          },
+          "userType": {
+            "type": "string"
+          },
+          "contextualDetails": {
+            "type": "string"
+          },
+          "motivations": {
+            "type": "string"
+          },
+          "expectedOutcome": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "status": {
+            "type": "string",
+            "enum": ["identified", "validated", "in_progress", "completed"],
+            "default": "identified"
+          },
+          "createdBy": {
+            "type": "string"
+          }
+        }
+      },
+      "UserStory": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "epicId": {
+            "type": "string"
+          },
+          "jtbdId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "userType": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string"
+          },
+          "benefit": {
+            "type": "string"
+          },
+          "acceptanceCriteria": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "priority": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "points": {
+            "type": "integer"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["backlog", "ready", "in_progress", "review", "done"]
+          },
+          "technicalConsiderations": {
+            "type": "string"
+          },
+          "designConsiderations": {
+            "type": "string"
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "assignedTo": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "UserStoryInput": {
+        "type": "object",
+        "required": ["userType", "action", "benefit"],
+        "properties": {
+          "epicId": {
+            "type": "string"
+          },
+          "jtbdId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "userType": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string"
+          },
+          "benefit": {
+            "type": "string"
+          },
+          "acceptanceCriteria": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "priority": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "points": {
+            "type": "integer"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["backlog", "ready", "in_progress", "review", "done"],
+            "default": "backlog"
+          },
+          "technicalConsiderations": {
+            "type": "string"
+          },
+          "designConsiderations": {
+            "type": "string"
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "assignedTo": {
+            "type": "string"
+          }
+        }
+      },
+      "RequirementsImport": {
+        "type": "object",
+        "properties": {
+          "collaborationId": {
+            "type": "string",
+            "description": "ID of the agent collaboration that produced the requirements"
+          },
+          "projectName": {
+            "type": "string",
+            "description": "Name of the project"
+          },
+          "businessGoals": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of business goals identified during collaboration"
+          },
+          "functionalRequirements": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "priority": {
+                  "type": "string",
+                  "enum": ["high", "medium", "low"]
+                },
+                "userType": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Functional requirements identified during collaboration"
+          },
+          "technicalRequirements": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "category": {
+                  "type": "string"
+                },
+                "impact": {
+                  "type": "string",
+                  "enum": ["high", "medium", "low"]
+                }
+              }
+            },
+            "description": "Technical requirements identified during collaboration"
+          },
+          "designRequirements": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "category": {
+                  "type": "string"
+                },
+                "impact": {
+                  "type": "string",
+                  "enum": ["high", "medium", "low"]
+                }
+              }
+            },
+            "description": "Design requirements identified during collaboration"
+          },
+          "constraints": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": ["time", "budget", "technical", "organizational", "legal"]
+                }
+              }
+            },
+            "description": "Constraints identified during collaboration"
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "ID or name of the user/agent creating the import"
+          }
+        },
+        "required": ["projectName", "businessGoals", "functionalRequirements"]
       }
     }
   }
