@@ -14,6 +14,7 @@ const agentRoutes = require('./routes/agentRoutes');
 const workflowRoutes = require('./routes/workflowRoutes');
 const jobRoutes = require('./routes/jobRoutes');
 const toolRoutes = require('./routes/toolRoutes');
+const collaborationRoutes = require('./routes/collaborationRoutes');
 
 // Initialize Express app
 const app = express();
@@ -31,6 +32,7 @@ app.use('/api/agents', agentRoutes);
 app.use('/api/workflows', workflowRoutes);
 app.use('/api/jobs', jobRoutes);
 app.use('/api/tools', toolRoutes);
+app.use('/api/collaborations', collaborationRoutes);
 
 // Default route
 app.get('/', (req, res) => {

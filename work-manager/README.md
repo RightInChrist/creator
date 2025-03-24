@@ -22,6 +22,16 @@ The backend is built with Node.js and Express, using MongoDB for data storage. I
 - **Jobs**: Units of work that reference available code in the form of local code or tools
 - **Tools**: Executable components available locally or through remote procedure calls
 
+### Agent Collaboration System
+
+The backend includes a specialized agent collaboration system that allows multiple AI agents to work together on tasks. The current implementation focuses on a product discovery workflow with three specialized agents:
+
+- **Product Manager Agent**: Leads the requirements gathering process, interacting directly with customers
+- **Technical Leader Agent**: Provides technical guidance and ensures that technical details are collected
+- **Designer Agent**: Ensures that design considerations are properly addressed during requirements gathering
+
+This collaborative approach enables a more comprehensive gathering of requirements by addressing product, technical, and design considerations simultaneously.
+
 ## Development
 
 ### Prerequisites
@@ -81,5 +91,8 @@ The API will be available at http://localhost:5000, and MongoDB will be availabl
 - `/api/workflows` - CRUD operations for workflows
 - `/api/jobs` - CRUD operations for jobs
 - `/api/tools` - CRUD operations for tools
+- `/api/collaborations` - Operations for agent collaborations:
+  - `/api/collaborations/conversations` - Start a new agent conversation
+  - `/api/collaborations/workflows/product-discovery` - Create a new product discovery workflow
 
 This project is currently in active development. More information will be added as development progresses. 

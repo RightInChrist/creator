@@ -13,7 +13,16 @@ const agentSchema = new mongoose.Schema({
   type: {
     type: String,
     required: true,
-    enum: ['assistant', 'expert', 'coordinator', 'processor']
+    enum: ['product_manager', 'technical_leader', 'designer', 'assistant', 'expert', 'coordinator', 'processor']
+  },
+  role: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  systemPrompt: {
+    type: String,
+    required: true
   },
   prompts: [{
     type: mongoose.Schema.Types.ObjectId,
@@ -26,6 +35,21 @@ const agentSchema = new mongoose.Schema({
   capabilities: [{
     type: String,
     trim: true
+  }],
+  collaborationPatterns: [{
+    withAgentType: {
+      type: String,
+      enum: ['product_manager', 'technical_leader', 'designer', 'assistant', 'expert', 'coordinator', 'processor']
+    },
+    interactionType: {
+      type: String,
+      enum: ['advise', 'request_info', 'provide_info', 'review', 'approve']
+    },
+    prompt: String
+  }],
+  knowledgeBase: [{
+    topic: String,
+    content: String
   }],
   createdBy: {
     type: String,
