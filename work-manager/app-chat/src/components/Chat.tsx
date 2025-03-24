@@ -3,35 +3,29 @@
 import { useState, useRef, useEffect } from 'react';
 import { PaperAirplaneIcon } from '@heroicons/react/24/solid';
 import ChatMessage from './ChatMessage';
-
-interface Message {
-  id: string;
-  role: 'agent' | 'human';
-  content: string;
-  name: string;
-  timestamp: number;
-}
+import { useAccount } from '@/contexts/AccountContext';
+import { Message, Conversation } from '@/types';
 
 export default function Chat() {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const { currentAccount, currentProject } = useAccount();
+  const [conversation, setConversation] = useState<Conversation>({
+    id: `conv-${Date.now()}`,
+    accountId: currentAccount.id,
+    projectId: currentProject.id,
+    title: 'Requirements Discussion',
+    messages: [{
+      id: '1',
+      role: 'agent',
+      content: `Hello! I'm the Product Manager working on gathering requirements for the "${currentProject.name}" project. How can I help you today?`,
+      name: 'Product Manager',
+      timestamp: Date.now(),
+    }],
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  });
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  // Initialize messages on the client side only
-  useEffect(() => {
-    if (messages.length === 0) {
-      setMessages([
-        {
-          id: '1',
-          role: 'agent',
-          content: 'Hello! I\'m the Product Manager working on gathering requirements for your project. How can I help you today?',
-          name: 'Product Manager',
-          timestamp: Date.now(),
-        },
-      ]);
-    }
-  }, [messages.length]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -39,7 +33,7 @@ export default function Chat() {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [conversation.messages]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,7 +47,11 @@ export default function Chat() {
       timestamp: Date.now(),
     };
 
-    setMessages(prev => [...prev, userMessage]);
+    setConversation(prev => ({
+      ...prev,
+      messages: [...prev.messages, userMessage],
+      updatedAt: Date.now(),
+    }));
     setInput('');
     setIsLoading(true);
 
@@ -71,7 +69,11 @@ export default function Chat() {
         }, 1000);
       });
 
-      setMessages(prev => [...prev, response]);
+      setConversation(prev => ({
+        ...prev,
+        messages: [...prev.messages, response],
+        updatedAt: Date.now(),
+      }));
     } catch (error) {
       console.error('Error sending message:', error);
       // TODO: Add error handling UI
@@ -83,13 +85,19 @@ export default function Chat() {
   return (
     <div className="flex flex-col h-screen bg-gray-50">
       <div className="flex-none bg-white border-b border-gray-200 p-4">
-        <h1 className="text-xl font-semibold text-gray-900">Product Requirements Discussion</h1>
-        <p className="text-sm text-gray-500">Chat with our Product Manager to define your project requirements</p>
+        <div className="max-w-4xl mx-auto">
+          <h1 className="text-xl font-semibold text-gray-900">{conversation.title}</h1>
+          <div className="flex items-center gap-2 mt-1">
+            <span className="text-sm text-gray-500">{currentAccount.name}</span>
+            <span className="text-sm text-gray-400">/</span>
+            <span className="text-sm text-gray-500">{currentProject.name}</span>
+          </div>
+        </div>
       </div>
 
       <div className="flex-1 overflow-y-auto p-4">
         <div className="max-w-4xl mx-auto">
-          {messages.map((message) => (
+          {conversation.messages.map((message) => (
             <ChatMessage key={message.id} {...message} />
           ))}
           <div ref={messagesEndRef} />
