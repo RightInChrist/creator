@@ -1,7 +1,6 @@
 "use client";
 
-import { UserCircleIcon } from '@heroicons/react/24/solid';
-import Image from 'next/image';
+import { UserCircleIcon, UserIcon, ClipboardDocumentCheckIcon } from '@heroicons/react/24/solid';
 import { useMemo } from 'react';
 
 interface ChatMessageProps {
@@ -25,17 +24,11 @@ export default function ChatMessage({ role, content, name, timestamp }: ChatMess
         <div className="flex-shrink-0">
           {isAgent ? (
             <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
-              <Image
-                src="/pm-avatar.png"
-                alt="Product Manager"
-                width={32}
-                height={32}
-                className="rounded-full"
-              />
+              <ClipboardDocumentCheckIcon className="w-6 h-6 text-blue-600" />
             </div>
           ) : (
             <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
-              <UserCircleIcon className="w-8 h-8 text-gray-500" />
+              <UserIcon className="w-6 h-6 text-gray-500" />
             </div>
           )}
         </div>
