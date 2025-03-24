@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Collaboration System - Work Manager</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2, h3, h4 {
+            color: #2c3e50;
+        }
+        h1 {
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .role {
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+            margin: 20px 0;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 0 5px 5px 0;
+        }
+        .product-manager {
+            border-left-color: #3498db;
+        }
+        .technical-leader {
+            border-left-color: #e74c3c;
+        }
+        .designer {
+            border-left-color: #2ecc71;
+        }
+        .workflow {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+            background-color: #f8f9fa;
+        }
+        .step {
+            margin: 15px 0;
+            padding: 15px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .task-mapping {
+            background-color: #f0f7ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        code {
+            background-color: #f1f1f1;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .diagram {
+            display: block;
+            margin: 30px auto;
+            max-width: 100%;
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+        .api-example {
+            background-color: #f8f8f8;
+            border-left: 4px solid #e74c3c;
+            padding: 15px;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <h1>Agent Collaboration System</h1>
+    
+    <p>
+        The Work Manager platform includes a specialized agent collaboration system that enables multiple AI agents 
+        to work together to complete complex tasks. This document explains how these agents collaborate, particularly 
+        during the product discovery and requirements gathering phase.
+    </p>
+
+    <h2>Specialized Agents in the Work Manager</h2>
+    
+    <p>
+        Our system employs a trio of specialized agents to ensure comprehensive product discovery. Each agent brings 
+        a specific perspective and expertise to the requirements gathering process.
+    </p>
+
+    <div class="role product-manager">
+        <h3>Product Manager Agent</h3>
+        <p>
+            <strong>Role:</strong> Leads the requirements gathering process and interacts directly with the customer.
+        </p>
+        <p>
+            <strong>Responsibilities:</strong>
+            <ul>
+                <li>Guiding the customer through the requirements gathering process</li>
+                <li>Asking structured questions to identify business goals and use cases</li>
+                <li>Identifying user needs and core functionality requirements</li>
+                <li>Consolidating all gathered information into comprehensive requirements documents</li>
+                <li>Prioritizing features based on business value and customer needs</li>
+                <li>Managing the overall discovery workflow and transitions between phases</li>
+            </ul>
+        </p>
+        <p>
+            <strong>Prompt Guidance:</strong> The Product Manager agent is prompted to behave as an experienced product manager who excels at 
+            gathering requirements from customers. It asks clear questions to understand customer needs, goals, and constraints.
+        </p>
+    </div>
+
+    <div class="role technical-leader">
+        <h3>Technical Leader Agent</h3>
+        <p>
+            <strong>Role:</strong> Provides technical guidance and ensures that all necessary technical details are collected.
+        </p>
+        <p>
+            <strong>Responsibilities:</strong>
+            <ul>
+                <li>Identifying technical requirements that might be overlooked</li>
+                <li>Asking questions about scalability, performance, and infrastructure</li>
+                <li>Inquiring about existing systems and integration requirements</li>
+                <li>Assessing technical feasibility of proposed solutions</li>
+                <li>Identifying potential technical risks and constraints</li>
+                <li>Providing architectural recommendations based on requirements</li>
+            </ul>
+        </p>
+        <p>
+            <strong>Prompt Guidance:</strong> The Technical Leader agent is prompted to behave as a senior technical leader who helps identify 
+            technical requirements. It listens for technical implications in customer requirements and suggests questions 
+            to gather necessary technical details.
+        </p>
+    </div>
+
+    <div class="role designer">
+        <h3>Designer Agent</h3>
+        <p>
+            <strong>Role:</strong> Ensures that design and user experience considerations are properly addressed during requirements gathering.
+        </p>
+        <p>
+            <strong>Responsibilities:</strong>
+            <ul>
+                <li>Identifying user experience requirements and design constraints</li>
+                <li>Inquiring about brand guidelines, user preferences, and visual design requirements</li>
+                <li>Asking questions about user workflows and interaction patterns</li>
+                <li>Ensuring accessibility considerations are addressed</li>
+                <li>Identifying opportunities for design innovation</li>
+                <li>Providing design recommendations based on gathered information</li>
+            </ul>
+        </p>
+        <p>
+            <strong>Prompt Guidance:</strong> The Designer agent is prompted to behave as an experienced UI/UX designer who helps identify design requirements. 
+            It listens for design implications in customer requirements and suggests questions to gather necessary user 
+            experience details.
+        </p>
+    </div>
+
+    <h2>Collaborative Workflow</h2>
+    
+    <p>
+        These three agents collaborate in a structured workflow to gather comprehensive requirements from the customer.
+        The workflow consists of several key stages, each with specific goals and outcomes.
+    </p>
+
+    <div class="workflow">
+        <h3>Product Discovery Workflow</h3>
+        
+        <div class="step">
+            <h4>Step 1: Initial Customer Interview</h4>
+            <p>
+                <strong>Primary Agent:</strong> Product Manager
+            </p>
+            <p>
+                <strong>Support Agents:</strong> Technical Leader, Designer
+            </p>
+            <p>
+                <strong>Process:</strong> The Product Manager leads an initial interview with the customer, while the Technical Leader and 
+                Designer agents observe and contribute questions from their specialized perspectives.
+            </p>
+            <p>
+                <strong>Output:</strong> A document capturing the project overview, business goals, initial requirements, constraints, 
+                and follow-up questions.
+            </p>
+        </div>
+        
+        <div class="step">
+            <h4>Step 2: Requirements Refinement</h4>
+            <p>
+                <strong>Primary Agent:</strong> Product Manager
+            </p>
+            <p>
+                <strong>Support Agents:</strong> Technical Leader, Designer
+            </p>
+            <p>
+                <strong>Process:</strong> Based on the initial interview, more detailed requirements are gathered with specialized 
+                technical and design input. All three agents collaborate to ensure comprehensive coverage of functional, 
+                technical, and design requirements.
+            </p>
+            <p>
+                <strong>Output:</strong> Structured data containing functional requirements, technical requirements, design requirements, 
+                constraints, and open questions.
+            </p>
+        </div>
+        
+        <div class="step">
+            <h4>Step 3: Requirements Document Creation</h4>
+            <p>
+                <strong>Primary Agent:</strong> Product Manager
+            </p>
+            <p>
+                <strong>Process:</strong> The Product Manager creates a comprehensive requirements document based on all gathered information.
+            </p>
+            <p>
+                <strong>Output:</strong> A comprehensive document with sections for executive summary, business goals, user personas, 
+                functional requirements, technical requirements, design requirements, constraints, timeline, and success metrics.
+            </p>
+        </div>
+        
+        <div class="step">
+            <h4>Step 4: Technical Review</h4>
+            <p>
+                <strong>Primary Agent:</strong> Technical Leader
+            </p>
+            <p>
+                <strong>Process:</strong> The Technical Leader reviews the requirements document from a technical perspective and provides 
+                feedback.
+            </p>
+            <p>
+                <strong>Output:</strong> Technical review document covering technical feasibility, risks, architecture recommendations, 
+                integration considerations, and other technical feedback.
+            </p>
+        </div>
+        
+        <div class="step">
+            <h4>Step 5: Design Review</h4>
+            <p>
+                <strong>Primary Agent:</strong> Designer
+            </p>
+            <p>
+                <strong>Process:</strong> The Designer reviews the requirements document from a design perspective and provides feedback.
+            </p>
+            <p>
+                <strong>Output:</strong> Design review document covering user experience considerations, design risks, design recommendations, 
+                usability feedback, and other design feedback.
+            </p>
+        </div>
+        
+        <div class="step">
+            <h4>Step 6: Finalize Requirements</h4>
+            <p>
+                <strong>Primary Agent:</strong> Product Manager
+            </p>
+            <p>
+                <strong>Support Agents:</strong> Technical Leader, Designer
+            </p>
+            <p>
+                <strong>Process:</strong> The Product Manager incorporates all feedback to finalize the requirements document, with 
+                approval from the Technical Leader and Designer agents.
+            </p>
+            <p>
+                <strong>Output:</strong> Final requirements document approved by all three agents.
+            </p>
+        </div>
+        
+        <div class="step">
+            <h4>Step 7: Requirements Import to Task Management</h4>
+            <p>
+                <strong>Primary Agent:</strong> Product Manager
+            </p>
+            <p>
+                <strong>Process:</strong> The Product Manager transforms the finalized requirements into structured data that can be imported into the task management system.
+            </p>
+            <p>
+                <strong>Output:</strong> Requirements data imported into the task management system as epics, jobs-to-be-done, user stories, and tasks.
+            </p>
+        </div>
+    </div>
+
+    <h2>Mapping to Task Management System</h2>
+    
+    <div class="task-mapping">
+        <p>
+            The information collected by the collaborative agents is structured and stored in the task management system 
+            to enable efficient project execution. Here's how the gathered information maps to task management entities:
+        </p>
+        
+        <h3>Data Mapping</h3>
+        
+        <ul>
+            <li>
+                <strong>Epics:</strong> Derived from high-level business goals and major functional areas identified during 
+                the initial interview and requirements refinement.
+            </li>
+            <li>
+                <strong>Jobs to be Done (JTBD):</strong> Extracted from user needs and key problems they're trying to solve, 
+                as identified in the requirements document.
+            </li>
+            <li>
+                <strong>User Stories:</strong> Created from the detailed functional requirements, following the format 
+                "As a [user type], I want [action] so that [benefit]".
+            </li>
+            <li>
+                <strong>Tasks:</strong> Broken down from user stories, incorporating technical and design considerations 
+                identified by the specialized agents.
+            </li>
+        </ul>
+        
+        <h3>Task Management API Integration</h3>
+        
+        <p>
+            The structured information is imported to the Task Manager via the Requirements Import API endpoint:
+        </p>
+
+        <div class="api-example">
+            <p><strong>Endpoint:</strong> <code>POST /api/v1/requirements/import</code></p>
+            <p><strong>Request Example:</strong></p>
+<pre>
+{
+  "collaborationId": "collab-123456",
+  "projectName": "Customer Portal Redesign",
+  "businessGoals": [
+    "Increase customer self-service adoption by 30%",
+    "Reduce support ticket volume by 25%"
+  ],
+  "functionalRequirements": [
+    {
+      "description": "Users should be able to reset their password without contacting support",
+      "priority": "high",
+      "userType": "customer"
+    },
+    {
+      "description": "Users should be able to view their billing history for the past 12 months",
+      "priority": "medium",
+      "userType": "customer"
+    }
+  ],
+  "technicalRequirements": [
+    {
+      "description": "The system should support SSO integration with major identity providers",
+      "category": "authentication",
+      "impact": "high"
+    },
+    {
+      "description": "The API should handle at least 500 requests per second",
+      "category": "performance",
+      "impact": "medium"
+    }
+  ],
+  "designRequirements": [
+    {
+      "description": "The interface should comply with WCAG 2.1 AA accessibility standards",
+      "category": "accessibility",
+      "impact": "high"
+    },
+    {
+      "description": "The design system should support dark mode",
+      "category": "theme",
+      "impact": "medium"
+    }
+  ],
+  "constraints": [
+    {
+      "description": "The redesign must be completed within 3 months",
+      "type": "time"
+    },
+    {
+      "description": "The solution must use our existing authentication system",
+      "type": "technical"
+    }
+  ],
+  "createdBy": "product_manager_agent"
+}
+</pre>
+        </div>
+
+        <p>
+            The API will process this information and automatically generate:
+        </p>
+
+        <table>
+            <tr>
+                <th>Entity</th>
+                <th>Generated From</th>
+                <th>API Endpoint</th>
+            </tr>
+            <tr>
+                <td>Epics</td>
+                <td>projectName and businessGoals</td>
+                <td><code>GET/POST /api/v1/epics</code></td>
+            </tr>
+            <tr>
+                <td>Jobs to be Done</td>
+                <td>functionalRequirements (group by userType)</td>
+                <td><code>GET/POST /api/v1/jtbd</code></td>
+            </tr>
+            <tr>
+                <td>User Stories</td>
+                <td>functionalRequirements with technicalConsiderations and designConsiderations</td>
+                <td><code>GET/POST /api/v1/stories</code></td>
+            </tr>
+            <tr>
+                <td>Tasks</td>
+                <td>Derived from User Stories plus technical and design requirements</td>
+                <td><code>GET/POST /api/tasks</code></td>
+            </tr>
+        </table>
+
+        <h3>Data Traceability</h3>
+        
+        <p>
+            The task management system maintains relationships between these entities, ensuring traceability from high-level business goals down to individual tasks. This enables:
+        </p>
+        
+        <ul>
+            <li>Tracking which tasks contribute to which business goals</li>
+            <li>Understanding the technical and design considerations for each user story</li>
+            <li>Visualizing progress at different levels of granularity</li>
+            <li>Maintaining the connection back to original requirements and agent conversations</li>
+        </ul>
+    </div>
+
+    <h2>Technical Implementation</h2>
+    
+    <p>
+        The agent collaboration system is implemented using:
+    </p>
+    
+    <ul>
+        <li>MongoDB for storage of agent definitions, workflows, and conversation history</li>
+        <li>Express.js backend for API endpoints</li>
+        <li>Specialized agent models with defined roles and system prompts</li>
+        <li>Workflow definitions that structure the collaboration process</li>
+        <li>A conversation model that captures all interactions between agents and customers</li>
+        <li>Integration with the Task Manager API to transform requirements into actionable tasks</li>
+    </ul>
+    
+    <p>
+        The three specialized agents (Product Manager, Technical Leader, Designer) are created with default system prompts 
+        that guide their behavior, but these can be customized for specific project needs.
+    </p>
+    
+    <h3>System Architecture</h3>
+    
+    <p>
+        The agent collaboration system interacts with the task management system through RESTful API calls:
+    </p>
+    
+    <ol>
+        <li>Agent collaboration service collects requirements through the defined workflow</li>
+        <li>Requirements are structured according to the RequirementsImport schema</li>
+        <li>Data is posted to the requirements import endpoint</li>
+        <li>Task management system creates the appropriate entities and relationships</li>
+        <li>Project team can immediately begin work on the created tasks</li>
+    </ol>
+
+    <footer>
+        <p>
+            <small>Work Manager Documentation - Agent Collaboration System v1.0</small>
+        </p>
+    </footer>
+</body>
+</html> 
