@@ -9,9 +9,6 @@ COPY package*.json ./
 # Install app dependencies
 RUN npm install
 
-# Bundle app source
-COPY . .
-
 # Expose port
 EXPOSE 5000
 
