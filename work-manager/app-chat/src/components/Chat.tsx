@@ -81,11 +81,11 @@ export default function Chat({ conversationId }: ChatProps) {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
-      <div className="flex-none bg-white border-b border-gray-200 p-4">
+    <div className="flex flex-col h-screen bg-gray-900">
+      <div className="flex-none bg-gray-800 border-b border-gray-700 p-4">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-xl font-semibold text-gray-900">{conversation.title}</h1>
-          <p className="text-sm text-gray-500">{currentProject.name}</p>
+          <h1 className="text-xl font-semibold text-gray-100">{conversation.title}</h1>
+          <p className="text-sm text-gray-400">{currentProject.name}</p>
         </div>
       </div>
 
@@ -98,7 +98,7 @@ export default function Chat({ conversationId }: ChatProps) {
         </div>
       </div>
 
-      <div className="flex-none bg-white border-t border-gray-200 p-4">
+      <div className="flex-none bg-gray-800 border-t border-gray-700 p-4">
         <form onSubmit={handleSubmit} className="max-w-4xl mx-auto">
           <div className="flex gap-4">
             <input
@@ -106,13 +106,13 @@ export default function Chat({ conversationId }: ChatProps) {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Type your message..."
-              className="flex-1 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="flex-1 rounded-lg border border-gray-600 bg-gray-700 px-4 py-2 text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
               disabled={isLoading}
             />
             <button
               type="submit"
               disabled={isLoading}
-              className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
+              className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 disabled:opacity-50"
             >
               <PaperAirplaneIcon className="h-5 w-5" />
             </button>

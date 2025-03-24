@@ -2,24 +2,22 @@
 
 import { UserCircleIcon, UserIcon, ClipboardDocumentCheckIcon } from '@heroicons/react/24/solid';
 import { useMemo } from 'react';
+import { Message } from '@/types';
 
-interface ChatMessageProps {
-  role: 'agent' | 'human';
-  content: string;
-  name: string;
-  timestamp: number;
-}
-
-export default function ChatMessage({ role, content, name, timestamp }: ChatMessageProps) {
+export default function ChatMessage({ role, content, name, timestamp }: Message) {
   const isAgent = role === 'agent';
+  const isHuman = role === 'human';
   
   const formattedTime = useMemo(() => {
     const date = new Date(timestamp);
-    return date.toLocaleTimeString();
+    return date.toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
   }, [timestamp]);
   
   return (
-    <div className={`flex ${isAgent ? 'justify-start' : 'justify-end'} mb-4`}>
+    <div className={`flex ${isHuman ? 'justify-end' : 'justify-start'} mb-4`}>
       <div className={`flex ${isAgent ? 'flex-row' : 'flex-row-reverse'} max-w-[80%] items-start gap-3`}>
         <div className="flex-shrink-0">
           {isAgent ? (
@@ -34,8 +32,12 @@ export default function ChatMessage({ role, content, name, timestamp }: ChatMess
         </div>
         <div className={`flex flex-col ${isAgent ? 'items-start' : 'items-end'}`}>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-sm font-medium text-gray-900">{name}</span>
-            <span className="text-xs text-gray-500">{formattedTime}</span>
+            <span className={`text-sm font-medium ${isHuman ? 'text-blue-200' : 'text-gray-400'}`}>
+              {name}
+            </span>
+            <span className={`text-xs ${isHuman ? 'text-blue-200' : 'text-gray-500'}`}>
+              {formattedTime}
+            </span>
           </div>
           <div className={`rounded-lg px-4 py-2 ${
             isAgent 
