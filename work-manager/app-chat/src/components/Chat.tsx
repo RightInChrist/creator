@@ -3,26 +3,16 @@
 import { useState, useRef, useEffect } from 'react';
 import { PaperAirplaneIcon } from '@heroicons/react/24/solid';
 import ChatMessage from './ChatMessage';
-import { useAccount } from '@/contexts/AccountContext';
-import { Message, Conversation } from '@/types';
+import { useProject } from '@/contexts/ProjectContext';
+import { Message } from '@/types';
 
-export default function Chat() {
-  const { currentAccount, currentProject } = useAccount();
-  const [conversation, setConversation] = useState<Conversation>({
-    id: `conv-${Date.now()}`,
-    accountId: currentAccount.id,
-    projectId: currentProject.id,
-    title: 'Requirements Discussion',
-    messages: [{
-      id: '1',
-      role: 'agent',
-      content: `Hello! I'm the Product Manager working on gathering requirements for the "${currentProject.name}" project. How can I help you today?`,
-      name: 'Product Manager',
-      timestamp: Date.now(),
-    }],
-    createdAt: Date.now(),
-    updatedAt: Date.now(),
-  });
+interface ChatProps {
+  conversationId: string;
+}
+
+export default function Chat({ conversationId }: ChatProps) {
+  const { currentProject, conversations, updateConversation } = useProject();
+  const conversation = conversations.find(c => c.id === conversationId);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -33,25 +23,28 @@ export default function Chat() {
 
   useEffect(() => {
     scrollToBottom();
-  }, [conversation.messages]);
+  }, [conversation?.messages]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim() || isLoading) return;
+    if (!conversation || !input.trim() || isLoading) return;
 
+    const now = Date.now();
     const userMessage: Message = {
-      id: `user-${Date.now()}`,
+      id: `user-${now}`,
       role: 'human',
       content: input.trim(),
       name: 'You',
-      timestamp: Date.now(),
+      timestamp: now,
     };
 
-    setConversation(prev => ({
-      ...prev,
-      messages: [...prev.messages, userMessage],
-      updatedAt: Date.now(),
-    }));
+    const updatedConversation = {
+      ...conversation,
+      messages: [...conversation.messages, userMessage],
+      updatedAt: now,
+    };
+
+    updateConversation(updatedConversation);
     setInput('');
     setIsLoading(true);
 
@@ -59,21 +52,22 @@ export default function Chat() {
       // TODO: Replace with actual API call to backend
       const response = await new Promise<Message>((resolve) => {
         setTimeout(() => {
+          const responseTime = Date.now();
           resolve({
-            id: `pm-${Date.now()}`,
+            id: `pm-${responseTime}`,
             role: 'agent',
             content: 'Thank you for sharing that. Could you tell me more about your specific goals and requirements?',
             name: 'Product Manager',
-            timestamp: Date.now(),
+            timestamp: responseTime,
           });
         }, 1000);
       });
 
-      setConversation(prev => ({
-        ...prev,
-        messages: [...prev.messages, response],
-        updatedAt: Date.now(),
-      }));
+      updateConversation({
+        ...updatedConversation,
+        messages: [...updatedConversation.messages, response],
+        updatedAt: response.timestamp,
+      });
     } catch (error) {
       console.error('Error sending message:', error);
       // TODO: Add error handling UI
@@ -82,16 +76,16 @@ export default function Chat() {
     }
   };
 
+  if (!conversation) {
+    return null;
+  }
+
   return (
     <div className="flex flex-col h-screen bg-gray-50">
       <div className="flex-none bg-white border-b border-gray-200 p-4">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-xl font-semibold text-gray-900">{conversation.title}</h1>
-          <div className="flex items-center gap-2 mt-1">
-            <span className="text-sm text-gray-500">{currentAccount.name}</span>
-            <span className="text-sm text-gray-400">/</span>
-            <span className="text-sm text-gray-500">{currentProject.name}</span>
-          </div>
+          <p className="text-sm text-gray-500">{currentProject.name}</p>
         </div>
       </div>
 

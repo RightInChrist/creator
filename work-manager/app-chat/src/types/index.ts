@@ -1,12 +1,5 @@
-export interface Account {
-  id: string;
-  name: string;
-  createdAt: number;
-}
-
 export interface Project {
   id: string;
-  accountId: string;
   name: string;
   description: string;
   createdAt: number;
@@ -22,7 +15,6 @@ export interface Message {
 
 export interface Conversation {
   id: string;
-  accountId: string;
   projectId: string;
   title: string;
   messages: Message[];
