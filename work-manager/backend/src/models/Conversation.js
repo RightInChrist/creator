@@ -3,14 +3,14 @@ const mongoose = require('mongoose');
 const messageSchema = new mongoose.Schema({
   role: {
     type: String,
+    enum: ['human', 'agent'],
     required: true
   },
-  agentId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Agent'
-  },
-  name: String,
   content: {
+    type: String,
+    required: true
+  },
+  name: {
     type: String,
     required: true
   },
@@ -20,44 +20,27 @@ const messageSchema = new mongoose.Schema({
   }
 });
 
-const participantSchema = new mongoose.Schema({
-  agentId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Agent',
-    required: true
-  },
-  name: String,
-  type: String,
-  role: String
-});
-
 const conversationSchema = new mongoose.Schema({
-  workflowId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Workflow'
+  title: {
+    type: String,
+    required: true,
+    trim: true
   },
-  stepId: String,
-  participants: [participantSchema],
-  context: {
-    type: mongoose.Schema.Types.Mixed,
-    default: {}
+  projectId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Project',
+    required: true
   },
   messages: [messageSchema],
   status: {
     type: String,
-    enum: ['active', 'paused', 'completed', 'failed'],
+    enum: ['active', 'archived'],
     default: 'active'
   },
   metadata: {
     type: mongoose.Schema.Types.Mixed,
     default: {}
-  },
-  summary: String,
-  startedAt: {
-    type: Date,
-    default: Date.now
-  },
-  endedAt: Date
+  }
 }, {
   timestamps: true
 });

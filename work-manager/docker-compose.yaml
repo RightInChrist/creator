@@ -1,18 +1,53 @@
 version: '3.8'
 
 services:
+  # Nginx reverse proxy
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "1984:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - app-chat
+      - backend
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # Frontend Next.js service
+  app-chat:
+    build:
+      context: ./app-chat
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./app-chat:/usr/src/app
+      - /usr/src/app/node_modules
+      - /usr/src/app/.next
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:1984/api/v1
+      - NODE_ENV=development
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - app-network
+    command: sh -c "npm install && npm run dev"
+
   # Backend API service
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    ports:
-      - "5000:5000"
+    expose:
+      - "5001"
     volumes:
       - ./backend:/usr/src/app
       - /usr/src/app/node_modules
     environment:
-      - PORT=5000
+      - PORT=5001
       - MONGODB_URI=mongodb://mongo:27017/work-manager
       - NODE_ENV=development
     depends_on:
@@ -20,6 +55,7 @@ services:
     restart: unless-stopped
     networks:
       - app-network
+    command: sh -c "npm install && npm run dev"
 
   # MongoDB service
   mongo:
